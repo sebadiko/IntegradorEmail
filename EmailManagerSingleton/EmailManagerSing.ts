@@ -1,16 +1,17 @@
 import { EmailLeaf } from "../CarpetaComposite/EmailLeaf";
 import { CarpetaComposite } from "../CarpetaComposite/CarpetaComposite";
 import { EmailComponent } from "../CarpetaComposite/EmailComponent";
+import { carpetaPrivadaProxy } from "../Proxy/carpetaPrivadaProxy";
 
 export class EmailManagerSing{
     //instancia privada para manejar el singleton internamente
     private static instance: EmailManagerSing;
     public BandejaEnviados: EmailLeaf[] = [];
     public carpetas: CarpetaComposite[] = [];
+    public proxy = new carpetaPrivadaProxy();
 
     //el constructor debe estar privado para no permitir generar instancia de la clase
     private constructor() {
-
     }
 
     //el metodo estatico permite acceder a la instancia sin necesidad de instanciarla
@@ -22,7 +23,6 @@ export class EmailManagerSing{
         //devolvemos la instancia de la clase
         return EmailManagerSing.instance;
     }
-
 
     public Enviar(email: EmailLeaf){
         //si tenemos todos los datos, agregamos el mail a bandeja de enviados
@@ -41,6 +41,14 @@ export class EmailManagerSing{
 
     public AñadiEmail(pIdentificador: number, pEmail: EmailComponent):void{
         this.carpetas[pIdentificador].Add(pEmail);
+    }
+
+    public BorrarEmail(pIdentif: number, pEmail: EmailLeaf): void{
+        this.carpetas[pIdentif].Delete(pEmail);
+    }
+
+    public carpetaPrivada(pContraseña: string): any{
+        return this.proxy.Acceso(pContraseña);
     }
 
 }
