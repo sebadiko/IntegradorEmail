@@ -109,3 +109,8 @@ test('8_ Se debe poder eliminar un email de una carpeta a través del emailManag
   expect(emailManager.carpetas[1].CantidadEmails()).toBe(3);
 })
 
+test('8_ Se debe poder crear una carpeta privada a traves de proxy por medio del emailManager', () => {
+  
+  //Si la contraseña ingresada es correcta, la función debe devolver una carpeta de emails distinto a nulo.
+  expect(emailManager.carpetaPrivada("abc123")!==null).toBeTruthy;
+})
