@@ -3,6 +3,8 @@ import { CarpetaComposite } from "../CarpetaComposite/CarpetaComposite";
 import { EmailComponent } from "../CarpetaComposite/EmailComponent";
 import { Contacto } from "../contacto";
 import { EmailManagerSing } from "../EmailManagerSingleton/EmailManagerSing";
+import { ICarpeta } from "../Proxy/carpetaProxy";
+import { carpetaPrivada } from "../Proxy/carpetasArreglo";
 
 
 let emailManager = EmailManagerSing.getInstance();
@@ -132,3 +134,9 @@ test('11_ Se debe poder agregar emails a una carpeta privada a traves de proxy',
   expect(emailManager.carpetaPrivada("abc123").CantidadEmails()).toBe(1);
 })
 
+it('12_ Cuando se intenta ingresar a carpetaPrivada se debería negar el acceso', () => {
+  
+  let carpetaPrivada1: ICarpeta = new carpetaPrivada();//En una misma variable se usa distintos metodos
+
+  expect(() => carpetaPrivada1.Acceso("abc123")).toThrow('No se puede acceder directo sin pasar por el Proxy');
+});
