@@ -2,11 +2,11 @@ import { EmailLeaf } from "../CarpetaComposite/EmailLeaf";
 import { CarpetaComposite } from "../CarpetaComposite/CarpetaComposite";
 import { EmailComponent } from "../CarpetaComposite/EmailComponent";
 
-export class EmailManagerSing {
+export class EmailManagerSing{
     //instancia privada para manejar el singleton internamente
     private static instance: EmailManagerSing;
-    public carpetas: CarpetaComposite[] = [];
     public BandejaEnviados: EmailLeaf[] = [];
+    public carpetas: CarpetaComposite[] = [];
 
     //el constructor debe estar privado para no permitir generar instancia de la clase
     private constructor() {
@@ -33,15 +33,14 @@ export class EmailManagerSing {
 
     public CrearCarpeta(pNombre: string, pIdentificador: number, pAsunto = "", pContenido = ""): Boolean{
         if(pNombre !="" && pIdentificador != null && pAsunto == "" && pContenido == ""){
-            this.carpetas[pIdentificador] = new CarpetaComposite(pNombre, pIdentificador, pAsunto, pContenido);
+            this.carpetas[pIdentificador] = new CarpetaComposite(pNombre, pIdentificador)
             return true
         }
         return false;
     }
 
-    public AñadiEmail(pCarpeta: CarpetaComposite, pEmail: EmailComponent): CarpetaComposite{
-        pCarpeta.Add(pEmail);
-        return pCarpeta;
+    public AñadiEmail(pIdentificador: number, pEmail: EmailComponent):void{
+        this.carpetas[pIdentificador].Add(pEmail);
     }
 
 }

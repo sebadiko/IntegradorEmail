@@ -1,6 +1,6 @@
 import { EmailComponent } from './EmailComponent';
 
-export class CarpetaComposite extends EmailComponent {
+export class CarpetaComposite extends EmailComponent{
     private emails: EmailComponent[] = [];
     public nombre: string;
     public identificador: number;
@@ -10,6 +10,7 @@ export class CarpetaComposite extends EmailComponent {
         this.nombre = nombre;
         this.identificador = identificador;
     }
+
 
     public CantidadEmails(): number {
         //para obtener la cantidad de emails que tiene la carpeta
@@ -35,7 +36,7 @@ export class CarpetaComposite extends EmailComponent {
             this.emails.splice(index, 1);
         }
     }
-
+    
 
 }
 
