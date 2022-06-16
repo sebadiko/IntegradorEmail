@@ -7,82 +7,126 @@ import { EmailManagerSing } from "../EmailManagerSingleton/EmailManagerSing";
 
 let emailManager = EmailManagerSing.getInstance();
 
-test('Crear Mails en una Carpeta', () => {
-  let emailTest1: EmailLeaf = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
-  let emailTest2: EmailLeaf = new EmailLeaf("asunto2", "contenido2", new Contacto("nombre1", "email1"), [new Contacto("nombre3", "email3")]);
-  let emailTest3: EmailLeaf = new EmailLeaf("asunto3", "contenido3", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
-  let emailTest4: EmailLeaf = new EmailLeaf("asunto4", "contenido4", new Contacto("nombre1", "email1"), [new Contacto("nombre3", "email3")]);
 
-  emailManager.CrearCarpeta("Carpeta 1", 1);
- // emailManager.AñadiEmail(1, emailTest1);
+test('1_ Se debe poder crear un Email', () => {
+  let email1: EmailLeaf = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
 
-  expect(emailManager.carpetas[1].nombre).toEqual("Carpeta 1");
+  //El email creado no debe ser nulo
+  expect(email1 !== null).toBeTruthy;
 })
 
+test('2_ Se debe poder crear una carpeta', () => {
+  let carpetaNueva: CarpetaComposite = new CarpetaComposite("Carpeta1", 1);
 
+  //La carpeta creada debe ser disntinta a nulo
+  expect(carpetaNueva !== null).toBeTruthy;
+})
 
-test('Agregar la Bandeja de salida con la carpeta creada', () => {
-  let emailTest1: EmailLeaf = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
-  let emailTest2: EmailLeaf = new EmailLeaf("asunto2", "contenido2", new Contacto("nombre1", "email1"), [new Contacto("nombre3", "email3")]);
-  let emailTest3: EmailLeaf = new EmailLeaf("asunto3", "contenido3", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
-  let emailTest4: EmailLeaf = new EmailLeaf("asunto4", "contenido4", new Contacto("nombre1", "email1"), [new Contacto("nombre3", "email3")]);
+test('3_ Agregar a la bandeja de salida una carpeta', () => {
+  let email1: EmailLeaf = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
+  let email2: EmailLeaf = new EmailLeaf("asunto2", "contenido2", new Contacto("nombre1", "email1"), [new Contacto("nombre3", "email3")]);
+  let email3: EmailLeaf = new EmailLeaf("asunto3", "contenido3", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
+  let email4: EmailLeaf = new EmailLeaf("asunto4", "contenido4", new Contacto("nombre1", "email1"), [new Contacto("nombre3", "email3")]);
 
-  let carpetaNueva: CarpetaComposite = new CarpetaComposite("Carpeta1", 2);
-  carpetaNueva.Add(emailTest1);
-  carpetaNueva.Add(emailTest2);
-  carpetaNueva.Add(emailTest3);
-  carpetaNueva.Add(emailTest4);
+  //Creamos una carpeta y agregamos 4 emails
+  let carpetaNueva: CarpetaComposite = new CarpetaComposite("Carpeta1", 1);
+  carpetaNueva.Add(email1);
+  carpetaNueva.Add(email2);
+  carpetaNueva.Add(email3);
+  carpetaNueva.Add(email4);
 
-  //creo un nuevo email solo en la bandeja de salida
+  //Agregamos un mail a la bandeja de salida
   let emailTest5: EmailLeaf = new EmailLeaf("asunto4", "contenido4", new Contacto("nombre1", "email1"), [new Contacto("nombre5", "email5")]);
-
-  let bandejaSalida: CarpetaComposite = new CarpetaComposite("Bandeja de Salida", 1);
-  //añado el mail a la bandeja de salida
+  let bandejaSalida: CarpetaComposite = new CarpetaComposite("Bandeja de Salida", 0);
   bandejaSalida.Add(emailTest5);
 
-  //puedo agregar toda una carpeta dentro de otra
+  //Agregamos la carpeta con 4 emails a la bandeja de salida que ya posee 1 email
   bandejaSalida.Add(carpetaNueva);
 
-  //se espera que tenga los 5 mails de la carpeta 1  + el mail que se agrego a la bandeja de salida
+  //Bandeja de salida con los 4 emails de la carpeta + el email que tenía previamente
   expect(bandejaSalida.CantidadEmails()).toBe(5);
 
-  //se espera que la carpeta nueva solo tenga los 4 elementos iniciales
+  //La carpeta solo debe tener 4 emails
   expect(carpetaNueva.CantidadEmails()).toBe(4);
 })
 
-test('El objeto de emailManager no debe ser nulo', () => {
+
+test('4_ El objeto de emailManager no debe ser nulo', () => {
   expect(emailManager !== null).toBeTruthy;
 })
 
+test('5_ Se debe poder enviar un email a través del emailManager', () => {
+  let email1: EmailLeaf = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
 
-test('Se debe poder crear una carpeta de emails', () => {
+  emailManager.Enviar(email1);
+
+  //Se espera que la bandeja de enviados (salida) tenga un email guardado
+  expect(emailManager.BandejaEnviados.length).toBe(1);
+  expect(emailManager.BandejaEnviados[0].Asunto).toEqual("asunto1");
+})
+
+test('6_ Se debe poder crear una carpeta a través del emailManager', () => {
   emailManager.CrearCarpeta("Carpeta1", 1, "", "");
 
   expect(emailManager.carpetas[1].nombre).toEqual("Carpeta1");
 })
 
-
-test('Se debe poder agregar emails a una carpeta', () => {
-  let emailTest1: EmailLeaf = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
-  let emailTest2: EmailLeaf = new EmailLeaf("asunto2", "contenido2", new Contacto("nombre1", "email1"), [new Contacto("nombre3", "email3")]);
-  let emailTest3: EmailLeaf = new EmailLeaf("asunto3", "contenido3", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
-  let emailTest4: EmailLeaf = new EmailLeaf("asunto4", "contenido4", new Contacto("nombre1", "email1"), [new Contacto("nombre3", "email3")]);
+test('7_ Se debe poder agregar emails a una carpeta a través del emailManager', () => {
+  let email1: EmailLeaf = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
+  let email2: EmailLeaf = new EmailLeaf("asunto2", "contenido2", new Contacto("nombre1", "email1"), [new Contacto("nombre3", "email3")]);
+  let email3: EmailLeaf = new EmailLeaf("asunto3", "contenido3", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
+  let email4: EmailLeaf = new EmailLeaf("asunto4", "contenido4", new Contacto("nombre1", "email1"), [new Contacto("nombre3", "email3")]);
 
   emailManager.CrearCarpeta("Carpeta1", 1);
-  emailManager.AñadiEmail(1, emailTest1);
-  emailManager.AñadiEmail(1, emailTest2);
-  emailManager.AñadiEmail(1, emailTest3);
-  emailManager.AñadiEmail(1, emailTest4);
+  emailManager.AñadiEmail(1, email1);
+  emailManager.AñadiEmail(1, email2);
+  emailManager.AñadiEmail(1, email3);
+  emailManager.AñadiEmail(1, email4);
 
   expect(emailManager.carpetas[1].CantidadEmails()).toBe(4);
 })
 
+test('8_ Se debe poder eliminar un email de una carpeta a través del emailManager', () => {
+  let email1: EmailLeaf = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
+  let email2: EmailLeaf = new EmailLeaf("asunto2", "contenido2", new Contacto("nombre1", "email1"), [new Contacto("nombre3", "email3")]);
+  let email3: EmailLeaf = new EmailLeaf("asunto3", "contenido3", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
+  let email4: EmailLeaf = new EmailLeaf("asunto4", "contenido4", new Contacto("nombre1", "email1"), [new Contacto("nombre3", "email3")]);
 
-test('Se debe poder enviar un email', () => {
-  let emailTest1: EmailLeaf = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
+  //Creamos una carpeta y agregamos cuatro emails
+  emailManager.CrearCarpeta("Carpeta1", 1);
+  emailManager.AñadiEmail(1, email1);
+  emailManager.AñadiEmail(1, email2);
+  emailManager.AñadiEmail(1, email3);
+  emailManager.AñadiEmail(1, email4);
 
-  emailManager.Enviar(emailTest1);
+  //La carpeta debe contener 4 emails
+  expect(emailManager.carpetas[1].CantidadEmails()).toBe(4);
 
-  expect(emailManager.BandejaEnviados.length).toBe(1);
-  expect(emailManager.BandejaEnviados[0].Asunto).toEqual("asunto1");
+  //Borramos un email de la carpeta
+  emailManager.BorrarEmail(1, email2);
+
+  //La carpeta ahora debe contener 3 emails
+  expect(emailManager.carpetas[1].CantidadEmails()).toBe(3);
+})
+
+test('8_ Se debe poder crear una carpeta privada a traves de proxy por medio del emailManager', () => {
+  
+  //Si la contraseña ingresada es correcta, la función debe devolver una carpeta de emails distinto a nulo.
+  expect(emailManager.carpetaPrivada("abc123")!==null).toBeTruthy;
+})
+
+test('9_ La carpeta privada creada a través de proxy debe tener el nombre "Private', () => {
+  
+  //Si la contraseña ingresada es correcta, la función debe devolver una carpeta de emails distinto a nulo.
+  expect(emailManager.carpetaPrivada("abc123").nombre).toEqual("Private");
+})
+
+test('10_ Se debe poder agregar emails a una carpeta privada a traves de proxy', () => {
+  let email1: EmailLeaf = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
+   
+  //Se agrega por proxy un email a la carpeta privada
+  emailManager.carpetaPrivada("abc123").Add(email1);
+
+  //Se espera que la carpeta privada contenga un email.
+  expect(emailManager.carpetaPrivada("abc123").CantidadEmails()).toBe(1);
 })

@@ -36,7 +36,6 @@ export class CarpetaComposite extends EmailComponent{
             this.emails.splice(index, 1);
         }
     }
-    
 
 }
 
