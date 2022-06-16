@@ -7,7 +7,12 @@ export class Contacto {
         //seteamos los valores de nombre y email
         this.Nombre = nombre;
         this.Email = email;
+
     }
+    public GetNombre(): string {
+        return this.Nombre;
+    }
+    
 
     
 }
