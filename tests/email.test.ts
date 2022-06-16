@@ -131,3 +131,4 @@ test('11_ Se debe poder agregar emails a una carpeta privada a traves de proxy',
   //Se espera que la carpeta privada contenga un email.
   expect(emailManager.carpetaPrivada("abc123").CantidadEmails()).toBe(1);
 })
+
