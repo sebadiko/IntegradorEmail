@@ -114,8 +114,20 @@ test('9_ Se debe poder crear una carpeta privada a traves de proxy por medio del
   //Si la contraseña ingresada es correcta, la función debe devolver una carpeta de emails distinto a nulo.
   expect(emailManager.carpetaPrivada("abc123")!==null).toBeTruthy;
 })
+
+
 test('10_ La carpeta privada creada a través de proxy debe tener el nombre "Private', () => {
   
   //Si la contraseña ingresada es correcta, la función debe devolver una carpeta de emails distinto a nulo.
   expect(emailManager.carpetaPrivada("abc123").nombre).toEqual("Private");
+})
+
+test('11_ Se debe poder agregar emails a una carpeta privada a traves de proxy', () => {
+  let email1: EmailLeaf = new EmailLeaf("asunto1", "contenido1", new Contacto("nombre1", "email1"), [new Contacto("nombre2", "email2")]);
+   
+  //Se agrega por proxy un email a la carpeta privada
+  emailManager.carpetaPrivada("abc123").Add(email1);
+
+  //Se espera que la carpeta privada contenga un email.
+  expect(emailManager.carpetaPrivada("abc123").CantidadEmails()).toBe(1);
 })
