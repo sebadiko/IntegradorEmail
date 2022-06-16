@@ -12,7 +12,7 @@ export class Contacto {
     public GetNombre(): string {
         return this.Nombre;
     }
-    
-
-    
+    public GetEmail(): string {
+        return this.Email;
+    }   
 }
